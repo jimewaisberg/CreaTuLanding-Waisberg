@@ -1,0 +1,38 @@
+.navbar {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 2rem;
+    background: var(--color-white);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  }
+  
+  .navbar__logo {
+    font-family: var(--font-sans);
+    font-size: 1.5rem;
+    color: var(--color-primary);
+  }
+  
+  .navbar__links {
+    display: flex;
+    gap: 1.5rem;
+  }
+  
+  .navbar__links a {
+    font-family: var(--font-sans);
+    font-weight: 500;
+    color: var(--color-primary);
+    transition: color var(--transition);
+  }
+  
+  .navbar__links a:hover {
+    color: var(--color-accent);
+  }
+  
+  .navbar__cart {
+    cursor: pointer;
+  }
+  

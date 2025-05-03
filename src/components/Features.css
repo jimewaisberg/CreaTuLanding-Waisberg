@@ -1,0 +1,35 @@
+.features {
+    padding: 4rem 2rem;
+    background: var(--color-white);
+    color: var(--color-primary);
+    text-align: center;
+  }
+  
+  .features__title {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    font-family: var(--font-serif);
+  }
+  
+  .features__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.5rem;
+  }
+  
+  .features__item {
+    padding: 1.5rem;
+    border-radius: 8px;
+    background: linear-gradient(135deg, rgba(59,130,246,0.1), rgba(6,182,212,0.1));
+    transition: transform var(--transition);
+  }
+  
+  .features__item:hover {
+    transform: translateY(-5px);
+  }
+  
+  .features__item h3 {
+    margin-bottom: 0.5rem;
+    font-family: var(--font-serif);
+  }
+  

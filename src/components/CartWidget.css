@@ -1,0 +1,29 @@
+.cart-widget {
+    position: relative;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: transform var(--transition);
+  }
+  .cart-widget.animate {
+    animation: pop var(--transition);
+  }
+  @keyframes pop {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.3); }
+    100% { transform: scale(1); }
+  }
+  .cart-widget__count {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: var(--color-accent);
+    color: var(--color-white);
+    font-size: 0.75rem;
+    width: 1.2rem;
+    height: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+  }
+  
