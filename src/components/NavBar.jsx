@@ -1,38 +1,20 @@
-import React from 'react';
-import CartWidget from './CartWidget';
-import './NavBar.css';
+import { NavLink } from "react-router-dom";
+import CartWidget from "./CartWidget";
+import "./NavBar.css";
 
-const NavBar = ({ count, onCartClick, onClearSelection }) => (
-  <nav className="navbar fade-in">
+const NavBar = ({ count, onCartClick }) => (
+  <nav className="navbar">
     <div className="navbar__logo">Bottles</div>
+
     <ul className="navbar__links">
-      <li>
-        <a
-          href="#inicio"
-          onClick={e => {
-            e.preventDefault();
-            onClearSelection();
-            window.location.hash = 'inicio';
-          }}
-        >
-          Inicio
-        </a>
-      </li>
-      <li>
-        <a
-          href="#productos"
-          onClick={e => {
-            e.preventDefault();
-            onClearSelection();
-            window.location.hash = 'productos';
-          }}
-        >
-          Productos
-        </a>
-      </li>
-      <li><a href="#contacto">Contacto</a></li>
+      <li><NavLink to="/">Inicio</NavLink></li>
+      <li><NavLink to="/category/clasicas">Clásicas</NavLink></li>
+      <li><NavLink to="/category/inteligentes">Inteligentes</NavLink></li>
+      <li><NavLink to="/category/termica">Térmicas</NavLink></li>
     </ul>
-    <div className="navbar__cart" onClick={onCartClick}>
+
+    {/* Ícono de carrito */}
+    <div className="navbar__cart" style={{ marginLeft: "auto" }} onClick={onCartClick}>
       <CartWidget count={count} />
     </div>
   </nav>

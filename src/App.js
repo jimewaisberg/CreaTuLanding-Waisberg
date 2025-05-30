@@ -1,51 +1,49 @@
-import React, { useState } from 'react';
-import NavBar from './components/NavBar';
-import ItemListContainer from './components/ItemListContainer';
-import CartScreen from './components/CartScreen';
-import Contact from './components/Contact';
-import Footer from './components/Footer';
-import './App.css';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { useState, useEffect } from "react";
+import NavBar from "./components/NavBar";
+import ItemListContainer from "./components/ItemListContainer";
+import ItemDetailContainer from "./components/ItemDetailContainer";
+import CartScreen from "./components/CartScreen";
+import NotFound from "./components/NotFound";
 
 function App() {
-  const [cartItems, setCartItems] = useState([]);
+  /* ---------- carrito con persistencia ---------- */
+  const [cartItems, setCartItems] = useState(() => {
+    const saved = localStorage.getItem("cart");
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  useEffect(() => {
+    localStorage.setItem("cart", JSON.stringify(cartItems));
+  }, [cartItems]);
+
   const [showCart, setShowCart] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState(null);
 
-  const addToCart = product => {
-    setCartItems(items => {
-      const exists = items.find(i => i.id === product.id);
-      if (exists) {
-        return items.map(i =>
-          i.id === product.id ? { ...i, qty: i.qty + 1 } : i
-        );
-      } else {
-        return [...items, { ...product, qty: 1 }];
+  const addToCart = prod =>
+    setCartItems(curr => {
+      const idx = curr.findIndex(p => p.id === prod.id);
+      if (idx !== -1) {
+        const clone = [...curr];
+        clone[idx].qty += prod.qty;
+        return clone;
       }
+      return [...curr, prod];
     });
-  };
 
-  const changeQty = (id, delta) => {
-    setCartItems(items =>
-      items
-        .map(i =>
-          i.id === id ? { ...i, qty: Math.max(1, i.qty + delta) } : i
-        )
-        .filter(i => i.qty > 0)
+  const changeQty = (id, d) =>
+    setCartItems(curr =>
+      curr.map(p => (p.id === id ? { ...p, qty: Math.max(1, p.qty + d) } : p))
     );
-  };
 
-  const removeItem = id => {
-    setCartItems(items => items.filter(i => i.id !== id));
-  };
-
-  const clearSelection = () => setSelectedProduct(null);
+  const removeItem = id =>
+    setCartItems(curr => curr.filter(p => p.id !== id));
+  /* --------------------------------------------- */
 
   return (
-    <div id="inicio">
+    <BrowserRouter>
       <NavBar
-        count={cartItems.reduce((sum, i) => sum + i.qty, 0)}
+        count={cartItems.reduce((s, i) => s + i.qty, 0)}
         onCartClick={() => setShowCart(true)}
-        onClearSelection={clearSelection}
       />
 
       {showCart && (
@@ -57,16 +55,19 @@ function App() {
         />
       )}
 
-      <ItemListContainer
-        greeting="Elige tu botella perfecta"
-        addToCart={addToCart}
-        selected={selectedProduct}
-        onView={setSelectedProduct}
-      />
-
-      <Contact />
-      <Footer />
-    </div>
+      <Routes>
+        <Route path="/" element={<ItemListContainer addToCart={addToCart} />} />
+        <Route
+          path="/category/:categoryId"
+          element={<ItemListContainer addToCart={addToCart} />}
+        />
+        <Route
+          path="/item/:itemId"
+          element={<ItemDetailContainer addToCart={addToCart} />}
+        />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 

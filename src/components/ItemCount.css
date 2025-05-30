@@ -1,0 +1,23 @@
+.ic-wrapper {
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid #d1d1d1;
+    border-radius: 6px;
+  }
+  
+  .ic-btn {
+    background: none;
+    border: none;
+    width: 36px;
+    height: 36px;
+    font-size: 1.2rem;
+    cursor: pointer;
+  }
+  
+  .ic-count {
+    width: 40px;
+    text-align: center;
+    font-weight: 500;
+  }
+  
+  

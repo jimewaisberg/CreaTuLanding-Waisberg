@@ -1,47 +1,65 @@
-import React from 'react';
-import './CartScreen.css';
+import "./CartScreen.css";
 
 const CartScreen = ({ items, onClose, onChangeQty, onRemove }) => {
-  const total = items.reduce(
-    (sum, i) => sum + parseFloat(i.price.replace('$', '')) * i.qty,
-    0
-  );
+  const total = items.reduce((sum, i) => sum + i.price * i.qty, 0);
 
   return (
-    <div className="cart-screen">
-      <div className="cart-screen__backdrop" onClick={onClose} />
-      <div className="cart-screen__content fade-in">
-        <button className="cart-screen__close" onClick={onClose}>
-          X
-        </button>
-        <h2>Tu Carrito</h2>
+    <div className="cart-overlay">
+      <div className="cart-box">
+        <header className="cart-header">
+          <h2>Tu carrito</h2>
+          <button className="cart-close" onClick={onClose}>
+            ×
+          </button>
+        </header>
+
         {items.length === 0 ? (
-          <p>Tu carrito está vacío.</p>
+          <p className="cart-empty">El carrito está vacío.</p>
         ) : (
-          <div className="cart-screen__items">
-            {items.map(item => (
-              <div key={item.id} className="cart-item">
-                <img src={item.image} alt={item.name} />
-                <div className="cart-item__info">
-                  <h3>{item.name}</h3>
-                  <p>{item.price}</p>
-                  <div className="cart-item__controls">
-                    <button onClick={() => onChangeQty(item.id, -1)}>-</button>
-                    <span>{item.qty}</span>
-                    <button onClick={() => onChangeQty(item.id, 1)}>+</button>
-                    <button className="remove" onClick={() => onRemove(item.id)}>
-                      X
-                    </button>
+          <>
+            <ul className="cart-list">
+              {items.map(i => (
+                <li key={i.id} className="cart-item">
+                  <img src={i.image} alt={i.name} />
+                  <div className="cart-info">
+                    <strong>{i.name}</strong>
+                    <span>${i.price.toFixed(2)}</span>
+
+                    <div className="cart-controls">
+                      <div className="cart-qty">
+                        <button
+                          className="qty-btn"
+                          onClick={() => onChangeQty(i.id, -1)}
+                        >
+                          −
+                        </button>
+                        <span className="qty-num">{i.qty}</span>
+                        <button
+                          className="qty-btn"
+                          onClick={() => onChangeQty(i.id, +1)}
+                        >
+                          +
+                        </button>
+                      </div>
+
+                      <button
+                        className="remove-btn"
+                        onClick={() => onRemove(i.id)}
+                      >
+                        Eliminar
+                      </button>
+                    </div>
                   </div>
-                </div>
-              </div>
-            ))}
-          </div>
+                </li>
+              ))}
+            </ul>
+
+            <footer className="cart-footer">
+              <span className="cart-total">Total: ${total.toFixed(2)}</span>
+              <button className="btn-primary">Finalizar compra</button>
+            </footer>
+          </>
         )}
-        <div className="cart-screen__footer">
-          <p>Total: ${total.toFixed(2)}</p>
-          <button className="btn">Pagar</button>
-        </div>
       </div>
     </div>
   );
