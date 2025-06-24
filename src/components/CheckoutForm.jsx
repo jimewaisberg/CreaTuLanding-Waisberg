@@ -10,6 +10,7 @@ const CheckoutForm = () => {
   const [orderId, setOrderId] = useState(null);
   const navigate = useNavigate();
 
+  /* carrito vacío */
   if (cartItems.length === 0 && !orderId) {
     return (
       <div className="checkout-wrap">
@@ -26,13 +27,20 @@ const CheckoutForm = () => {
 
   const handleSubmit = async e => {
     e.preventDefault();
-    const id = await createOrder({
-      buyer: form,
-      items: cartItems,
-      total: cartTotalPrice,
-    });
-    clearCart();
-    setOrderId(id);
+
+    /* compactamos los ítems a lo mínimo necesario */
+    const items = cartItems.map(({ id, name, price, qty }) => ({
+      id,
+      name,
+      price: Number(price),
+      qty,
+    }));
+
+    /* creamos la orden en Firestore */
+    const id = await createOrder(form, items, cartTotalPrice);
+
+    clearCart();          // limpiamos el carrito
+    setOrderId(id);       // mostramos el ID al usuario
   };
 
   return (

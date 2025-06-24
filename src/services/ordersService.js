@@ -1,13 +1,22 @@
 import { db } from "../firebase/firebase";
-import { collection, addDoc, Timestamp } from "firebase/firestore";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+
 
 const ordersRef = collection(db, "orders");
 
-export const createOrder = async data => {
+/**
+ @param {Object} buyer   
+ @param {Array}  items   
+ @param {Number} total   
+ */
+export const createOrder = async (buyer, items, total) => {
   const order = {
-    ...data,
-    date: Timestamp.now(),
+    buyer,
+    items,
+    total,
+    date: serverTimestamp(),
   };
+
   const docRef = await addDoc(ordersRef, order);
   return docRef.id;
 };
