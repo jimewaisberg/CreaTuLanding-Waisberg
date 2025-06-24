@@ -1,17 +1,28 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getProducts, getProductsByCategory } from "../products";
+import {
+  getProducts,
+  getProductsByCategory,
+} from "../services/productsService";
 import ItemList from "./ItemList";
 import Loader from "./Loader";
 
-const ItemListContainer = ({ addToCart }) => {
-  const [items, setItems] = useState(null);      // null = aún cargando
+/**
+ * Contenedor que se encarga de:
+ * 1) Pedir datos a Firestore (todo o filtrado por categoría)
+ * 2) Mostrar loader / mensaje vacío
+ * 3) Renderizar ItemList (presentacional)
+ */
+const ItemListContainer = () => {
   const { categoryId } = useParams();
+  const [items, setItems] = useState(null); // null = aún cargando
 
   useEffect(() => {
-    setItems(null);                              // muestra loader al cambiar categoría
+    setItems(null); // muestra loader en cada cambio
     const fetch = categoryId ? getProductsByCategory : getProducts;
-    fetch(categoryId).then(setItems);
+    fetch(categoryId)
+      .then(setItems)
+      .catch(() => setItems([]));
   }, [categoryId]);
 
   if (items === null) return <Loader />;
@@ -26,7 +37,7 @@ const ItemListContainer = ({ addToCart }) => {
   return (
     <section className="products-section">
       <h2>Catálogo</h2>
-      <ItemList products={items} addToCart={addToCart} />
+      <ItemList products={items} />
     </section>
   );
 };

@@ -1,10 +1,10 @@
 import { Link } from "react-router-dom";
 
 const Item = ({ product }) => {
+  // Si no existe description, usamos cadena vacía
+  const desc = product.description ?? "";
   const shortDesc =
-    product.description.length > 60
-      ? product.description.slice(0, 57) + "..."
-      : product.description;
+    desc.length > 60 ? desc.slice(0, 57) + "..." : desc;
 
   return (
     <div className="product-card">
@@ -14,7 +14,9 @@ const Item = ({ product }) => {
         <span className="product-cat">{product.category}</span>
         <h3>{product.name}</h3>
         <p className="product-desc">{shortDesc}</p>
-        <strong className="product-price">${product.price}</strong>
+        {product.price !== undefined && (
+          <strong className="product-price">${product.price}</strong>
+        )}
 
         <Link to={`/item/${product.id}`}>
           <button>Ver detalle</button>

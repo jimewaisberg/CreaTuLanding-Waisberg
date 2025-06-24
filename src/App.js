@@ -1,70 +1,30 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { useState, useEffect } from "react";
 import NavBar from "./components/NavBar";
 import ItemListContainer from "./components/ItemListContainer";
 import ItemDetailContainer from "./components/ItemDetailContainer";
 import CartScreen from "./components/CartScreen";
+import CheckoutForm from "./components/CheckoutForm";
 import NotFound from "./components/NotFound";
+import { useCart } from "./context/CartContext";
 
+/**
+ * Root de la SPA. Ya no maneja lógica de carrito,
+ * eso vive en CartContext.
+ */
 function App() {
-  /* ---------- carrito con persistencia ---------- */
-  const [cartItems, setCartItems] = useState(() => {
-    const saved = localStorage.getItem("cart");
-    return saved ? JSON.parse(saved) : [];
-  });
-
-  useEffect(() => {
-    localStorage.setItem("cart", JSON.stringify(cartItems));
-  }, [cartItems]);
-
-  const [showCart, setShowCart] = useState(false);
-
-  const addToCart = prod =>
-    setCartItems(curr => {
-      const idx = curr.findIndex(p => p.id === prod.id);
-      if (idx !== -1) {
-        const clone = [...curr];
-        clone[idx].qty += prod.qty;
-        return clone;
-      }
-      return [...curr, prod];
-    });
-
-  const changeQty = (id, d) =>
-    setCartItems(curr =>
-      curr.map(p => (p.id === id ? { ...p, qty: Math.max(1, p.qty + d) } : p))
-    );
-
-  const removeItem = id =>
-    setCartItems(curr => curr.filter(p => p.id !== id));
-  /* --------------------------------------------- */
+  const { showCart } = useCart();
 
   return (
     <BrowserRouter>
-      <NavBar
-        count={cartItems.reduce((s, i) => s + i.qty, 0)}
-        onCartClick={() => setShowCart(true)}
-      />
+      <NavBar />
 
-      {showCart && (
-        <CartScreen
-          items={cartItems}
-          onClose={() => setShowCart(false)}
-          onChangeQty={changeQty}
-          onRemove={removeItem}
-        />
-      )}
+      {showCart && <CartScreen />}
 
       <Routes>
-        <Route path="/" element={<ItemListContainer addToCart={addToCart} />} />
-        <Route
-          path="/category/:categoryId"
-          element={<ItemListContainer addToCart={addToCart} />}
-        />
-        <Route
-          path="/item/:itemId"
-          element={<ItemDetailContainer addToCart={addToCart} />}
-        />
+        <Route path="/" element={<ItemListContainer />} />
+        <Route path="/category/:categoryId" element={<ItemListContainer />} />
+        <Route path="/item/:itemId" element={<ItemDetailContainer />} />
+        <Route path="/checkout" element={<CheckoutForm />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>

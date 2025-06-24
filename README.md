@@ -1,70 +1,113 @@
-# Getting Started with Create React App
+Entrega Final.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Single-Page Application desarrollada con **React**, **React Router**, **Context API** y **Firebase Firestore**.  
+Permite navegar un catálogo, ver detalles, añadir productos a un carrito global y finalizar la compra generando una orden en Firestore.
 
-## Available Scripts
+---
 
-In the project directory, you can run:
+## ✨ Funcionalidades principales
 
-### `npm start`
+* Catálogo dinámico consultado en Firestore  
+* Filtro por categorías (`/category/:id`)  
+* Vista detalle con selector de unidades y validación de stock  
+* Carrito global vía Context (add, remove, cambiar cantidad, persistencia localStorage)  
+* Checkout con formulario validado, creación de orden y devolución del ID  
+* Renderizado condicional: loaders, mensajes de “sin productos”, “carrito vacío”, etc.  
+* Diseño responsive; navegación SPA sin recargas (404 incluida)
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+---
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## 🗂 Estructura de carpetas
 
-### `npm test`
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+src/
+ ├─ components/        // UI + contenedores
+ ├─ context/           // CartContext
+ ├─ firebase/          // inicialización firebase.js
+ ├─ services/          // productos / órdenes (Firestore)
+ └─ App.js             // rutas principales
 
-### `npm run build`
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+---
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## 🚀 Instalación rápida
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+1. Clonar el repositorio  
+   `$ git clone https://github.com/<tu-usuario>/ProyectoFinal+Waisberg.git`
 
-### `npm run eject`
+2. Instalar dependencias  
+   `$ cd ProyectoFinal+Waisberg`  
+   `$ npm install`
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+3. Copiar variables de entorno  
+   `$ cp .env.example .env.local`  
+   Editá `.env.local` con **tus** claves de Firebase:
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+REACT_APP_FIREBASE_API_KEY=AIzaSyDMbImYnpWUPTj3l-BNakmay6XGf1S9xLs
+REACT_APP_FIREBASE_AUTH_DOMAIN=ecommerce-coder-b4065.firebaseapp.com
+REACT_APP_FIREBASE_PROJECT_ID=ecommerce-coder-b4065
+REACT_APP_FIREBASE_STORAGE_BUCKET=ecommerce-coder-b4065.appspot.com
+REACT_APP_FIREBASE_MESSAGING_SENDER_ID=758689354602
+REACT_APP_FIREBASE_APP_ID=1:758689354602:web:f85849d4c34cd807b3cb13
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
 
-## Learn More
+4. Iniciar el servidor de desarrollo  
+   `$ npm start`
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+---
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## 📄 Scripts disponibles
 
-### Code Splitting
+| Comando              | Qué hace                                     |
+| -------------------- | -------------------------------------------- |
+| `npm start`          | Dev-server con hot-reload                    |
+| `npm run build`      | Genera build optimizado en `build/`          |
+| `npm run lint`       | Analiza el código con ESLint                 |
+| `npm run lint:fix`   | Analiza **y** corrige lo que sea posible     |
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+---
 
-### Analyzing the Bundle Size
+## 🛠 Configuración de Firestore
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+**Colección `products`**  
+Campos recomendados: `name` (string), `description` (string), `price` (number), `category` (string), `image` (string URL), `stock` (number).
 
-### Making a Progressive Web App
+**Colección `orders`**  
+Se crea automáticamente al confirmar el checkout.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+Reglas de desarrollo (abrir lectura de productos, permitir escritura de órdenes):
 
-### Advanced Configuration
+```
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{db}/documents {
+    match /products/{id} { allow read: if true; }
+    match /orders/{id}   { allow write: if true; allow read: if false; }
+  }
+}
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+---
 
-### Deployment
+## 🧹 Lint y limpieza
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+* Ejecutar `npm run lint` para ver advertencias.  
+* Ejecutar `npm run lint:fix` para formatear y eliminar errores simples.  
+* Buscar cualquier `console.log` antes de hacer commit:  
+  `$ grep -rn "console.log" src/`
 
-### `npm run build` fails to minify
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## 🌐 Deploy sugerido (Vercel / Netlify)
+
+1. Importar el repositorio.  
+2. Framework: **Create React App**.  
+3. Añadir en la sección Environment Variables las mismas claves `REACT_APP_*`.  
+4. Deploy y listo.
+
+---
+
+## 👩‍💻 Autora
+
+Jimena Waisberg – CoderHouse React JS – 2025

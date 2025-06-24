@@ -1,23 +1,31 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, Link } from "react-router-dom";
 import CartWidget from "./CartWidget";
+import { useCart } from "../context/CartContext";
 import "./NavBar.css";
 
-const NavBar = ({ count, onCartClick }) => (
-  <nav className="navbar">
-    <div className="navbar__logo">Bottles</div>
+const NavBar = () => {
+  const { cartTotalQty, setShowCart } = useCart();
 
-    <ul className="navbar__links">
-      <li><NavLink to="/">Inicio</NavLink></li>
-      <li><NavLink to="/category/clasicas">Clásicas</NavLink></li>
-      <li><NavLink to="/category/inteligentes">Inteligentes</NavLink></li>
-      <li><NavLink to="/category/termica">Térmicas</NavLink></li>
-    </ul>
+  return (
+    <nav className="navbar">
+      {/* Logo enlazado al home */}
+      <Link to="/" className="navbar__logo">
+        Bottles
+      </Link>
 
-    {/* Ícono de carrito */}
-    <div className="navbar__cart" style={{ marginLeft: "auto" }} onClick={onCartClick}>
-      <CartWidget count={count} />
-    </div>
-  </nav>
-);
+      <ul className="navbar__links">
+        <li><NavLink to="/">Inicio</NavLink></li>
+        <li><NavLink to="/category/clasicas">Clásicas</NavLink></li>
+        <li><NavLink to="/category/inteligentes">Inteligentes</NavLink></li>
+        <li><NavLink to="/category/termica">Térmicas</NavLink></li>
+      </ul>
+
+      {/* Ícono carrito */}
+      <div className="navbar__cart" onClick={() => setShowCart(true)}>
+        <CartWidget count={cartTotalQty} />
+      </div>
+    </nav>
+  );
+};
 
 export default NavBar;
